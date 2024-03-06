@@ -42,6 +42,7 @@ transform = transforms.Compose([
 model = None
 
 def load_model(compressed_model_path, model_class = POSCNN):
+    global model
     model_temp_path = 'temp_model.pth'
     with gzip.open(compressed_model_path, 'rb') as f_in:
         with open(model_temp_path, 'wb') as f_out:
@@ -50,7 +51,7 @@ def load_model(compressed_model_path, model_class = POSCNN):
     model.load_state_dict(torch.load(model_temp_path))
     model.eval()
     os.remove(model_temp_path)
-    return model
+    # return model
 
 def predict_image(image, model, transform):
     image = transform(image)
@@ -94,5 +95,5 @@ def predict_class():
 if __name__ == '__main__':
     current_dir = os.path.dirname(os.path.abspath(__file__))
     model_path = os.path.join(current_dir, 'advanced_pos_model.pth.gz')
-    model = load_model(model_path)
+    load_model(model_path)
     app.run(debug=True, port=10000)
