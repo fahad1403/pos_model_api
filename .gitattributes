@@ -1,2 +1,4 @@
 advanced_pos_model.pth.gz filter=lfs diff=lfs merge=lfs -text
 *.pth.gz filter=lfs diff=lfs merge=lfs -text
+*.pth filter=lfs diff=lfs merge=lfs -text
+advanced_pos_model.pth filter=lfs diff=lfs merge=lfs -text
