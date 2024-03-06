@@ -42,8 +42,11 @@ transform = transforms.Compose([
 def load_model(model_path):
     global model
     model = POSCNN()
-    
+
     model.load_state_dict(torch.load(model_path))
+    model = torch.quantization.quantize_dynamic(
+        model, {nn.Linear, nn.Conv2d}, dtype=torch.qint8
+    )
     model.eval()
     return model
 
