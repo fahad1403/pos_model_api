@@ -92,5 +92,7 @@ def predict_class():
     return jsonify({'prediction': predicted_class})
 
 if __name__ == '__main__':
-    model = load_model('advanced_pos_model.pth.gz')
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    model_path = os.path.join(current_dir, 'advanced_pos_model.pth.gz')
+    model = load_model(model_path)
     app.run(debug=True, port=10000)
