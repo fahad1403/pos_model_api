@@ -7,6 +7,8 @@ import shutil
 from torchvision import transforms
 import torch.nn as nn
 import torch.nn.functional as F
+import base64
+from io import BytesIO
 
 app = Flask(__name__)
 
@@ -71,6 +73,21 @@ def predict():
     if file.filename == '':
         return jsonify({'error': 'No selected file'}), 400
     image = Image.open(file.stream).convert('RGB')
+    predicted_class = predict_image(image, model, transform)
+    return jsonify({'prediction': predicted_class})
+
+@app.route('/predict_class', methods=['POST'])
+def predict_class():
+    data = request.get_json(force=True)
+    if 'image' not in data:
+        return jsonify({'error': 'No image provided'}), 400
+    
+    image_data = data['image']
+    try:
+        image = Image.open(BytesIO(base64.b64decode(image_data))).convert('RGB')
+    except Exception as e:
+        return jsonify({'error': 'Invalid image data'}), 400
+    
     predicted_class = predict_image(image, model, transform)
     return jsonify({'prediction': predicted_class})
 
