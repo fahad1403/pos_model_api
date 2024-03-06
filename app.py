@@ -39,14 +39,16 @@ transform = transforms.Compose([
     transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
 ])
 
-model = POSCNN
-
 def load_model(compressed_model_path):
     global model
-    model_temp_path = 'temp_model.pth'
+    model = POSCNN
+    current_dir = os.path.dirname(os.path.abspath(__file__))
+    model_temp_path = os.path.join(current_dir, 'temp_model.pth')
+
     with gzip.open(compressed_model_path, 'rb') as f_in:
         with open(model_temp_path, 'wb') as f_out:
             shutil.copyfileobj(f_in, f_out)
+            
     model.load_state_dict(torch.load(model_temp_path))
     model.eval()
     os.remove(model_temp_path)
